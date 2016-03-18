@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  code_id: 
+  user_id: 
+  encryption_key: MyString
+
+two:
+  code_id: 
+  user_id: 
+  encryption_key: MyString

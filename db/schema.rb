@@ -11,7 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160318131320) do
+ActiveRecord::Schema.define(version: 20160318183330) do
+
+  create_table "codes", force: :cascade do |t|
+    t.text     "code"
+    t.integer  "user_id"
+    t.string   "file_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "codes", ["user_id"], name: "index_codes_on_user_id"
+
+  create_table "encryptions", force: :cascade do |t|
+    t.integer  "code_id",        null: false
+    t.integer  "user_id",        null: false
+    t.string   "encryption_key", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "encryptions", ["code_id"], name: "index_encryptions_on_code_id"
+  add_index "encryptions", ["user_id"], name: "index_encryptions_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -26,6 +47,8 @@ ActiveRecord::Schema.define(version: 20160318131320) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.string   "name",                   default: "", null: false
+    t.string   "public_key",             default: "", null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
