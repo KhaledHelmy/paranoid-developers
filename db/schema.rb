@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20160318183330) do
     t.integer  "code_id",        null: false
     t.integer  "user_id",        null: false
     t.string   "encryption_key", null: false
+    t.string   "encryption_iv",  null: false
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
   end

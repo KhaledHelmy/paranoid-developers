@@ -4,7 +4,12 @@ class CodesController < ApplicationController
   # GET /codes
   # GET /codes.json
   def index
-    @codes = Code.all
+    @codes = current_user.codes
+  end
+
+  def all
+    @codes = current_user.encrypted_codes
+    render :index
   end
 
   # GET /codes/1

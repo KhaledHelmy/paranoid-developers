@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
-  resources :codes
+  resources :codes do
+    collection do
+      get 'all', as: :all
+    end
+  end
   get 'welcome/index'
 
   devise_for :users
