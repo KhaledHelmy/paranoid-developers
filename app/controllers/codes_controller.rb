@@ -31,7 +31,18 @@ class CodesController < ApplicationController
   def create
     code_param = code_params
     code_param[:user_id] = current_user.id
+
+    cipher = OpenSSL::Cipher::Cipher.new('aes-256-cbc')
+    cipher.encrypt
+    key = cipher.random_key
+    iv = cipher.random_iv
+    cipher.key = key
+
     @code = Code.new(code_param)
+
+    encrypted_code = cipher.update(@code.code)
+    encrypted_code << cipher.final
+    @code.code = encrypted_code.encode("UTF-8", "ISO-8859-15")
 
     respond_to do |format|
       if @code.save
