@@ -1,15 +1,12 @@
+require 'base64'
+
 class CodesController < ApplicationController
   before_action :set_code, only: [:show, :edit, :update, :destroy]
 
   # GET /codes
   # GET /codes.json
   def index
-    @codes = current_user.codes
-  end
-
-  def all
-    @codes = current_user.encrypted_codes
-    render :index
+    @codes = Code.all
   end
 
   # GET /codes/1
@@ -42,7 +39,7 @@ class CodesController < ApplicationController
 
     encrypted_code = cipher.update(@code.code)
     encrypted_code << cipher.final
-    @code.code = encrypted_code.encode("UTF-8", "ISO-8859-15")
+    @code.code = Base64.encode64(encrypted_code)
 
     respond_to do |format|
       if @code.save
