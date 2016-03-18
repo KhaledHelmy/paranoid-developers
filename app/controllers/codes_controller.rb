@@ -1,3 +1,4 @@
+require 'openssl'
 require 'base64'
 
 class CodesController < ApplicationController
@@ -43,6 +44,17 @@ class CodesController < ApplicationController
 
     respond_to do |format|
       if @code.save
+        User.all.each do |user|
+          public_key = OpenSSL::PKey::RSA.new(user.public_key)
+          encrypted_key = Base64.encode64(public_key.public_encrypt(key))
+          encrypted_iv = Base64.encode64(public_key.public_encrypt(iv))
+          encryption = Encryption.new
+          encryption.code_id = @code.id
+          encryption.user_id = user.id
+          encryption.encryption_key = encrypted_key
+          encryption.encryption_iv = encrypted_iv
+          encryption.save
+        end
         format.html { redirect_to @code, notice: 'Code was successfully created.' }
         format.json { render :show, status: :created, location: @code }
       else
