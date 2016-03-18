@@ -1,6 +1,5 @@
 <h1>Welcome</h1>
 <% if user_signed_in? %>
 	<%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
-	<%= link_to('List All Codes I uploaded', codes_path) %>
-	<%= link_to('List All my Codes', all_codes_path) %>
+	<%= link_to('List All Codes', all_codes_path) %>
 <% end %>
