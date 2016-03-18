@@ -84,7 +84,29 @@ class CodesController < ApplicationController
     respond_to do |format|
       code_param = code_params
       code_param[:user_id] = current_user.id
+
+      encryption = Encryption.find_by(code_id: @code.id, user_id: current_user.id)
+      private_key_file = `cat ~/.private_#{current_user.id}.pem`
+      private_key = OpenSSL::PKey::RSA.new(private_key_file)
+      key = private_key.private_decrypt(Base64.decode64(encryption.encryption_key))
+
+      cipher = OpenSSL::Cipher::Cipher.new('aes-256-cbc')
+      cipher.encrypt
+      iv = cipher.random_iv
+      cipher.key = key
+
+      encrypted_code = cipher.update(code_param[:code])
+      encrypted_code << cipher.final
+      code_param[:code] = Base64.encode64(encrypted_code)
+
       if @code.update(code_param)
+        User.all.each do |user|
+          public_key = OpenSSL::PKey::RSA.new(user.public_key)
+          encrypted_iv = Base64.encode64(public_key.public_encrypt(iv))
+          encryption = Encryption.find_by(code_id: @code.id, user_id: user.id)
+          encryption.encryption_iv = encrypted_iv
+          encryption.save
+        end
         format.html { redirect_to @code, notice: 'Code was successfully updated.' }
         format.json { render :show, status: :ok, location: @code }
       else
