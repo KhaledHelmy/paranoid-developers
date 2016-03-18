@@ -13,20 +13,7 @@ class CodesController < ApplicationController
   # GET /codes/1
   # GET /codes/1.json
   def show
-    encryption = Encryption.find_by(code_id: @code.id, user_id: current_user.id)
-    private_key_file = `cat ~/.private_#{current_user.id}.pem`
-    private_key = OpenSSL::PKey::RSA.new(private_key_file)
-    key = private_key.private_decrypt(Base64.decode64(encryption.encryption_key))
-    iv = private_key.private_decrypt(Base64.decode64(encryption.encryption_iv))
-
-    cipher = OpenSSL::Cipher.new('aes-256-cbc')
-    cipher.decrypt
-    cipher.key = key
-    cipher.iv = iv
-
-    decrypted_code = cipher.update(Base64.decode64(@code.code))
-    decrypted_code << cipher.final
-    @code.code = decrypted_code
+    @code.code = decrypt_code(@code.code)
   end
 
   # GET /codes/new
@@ -36,6 +23,7 @@ class CodesController < ApplicationController
 
   # GET /codes/1/edit
   def edit
+    @code.code = decrypt_code(@code.code)
   end
 
   # POST /codes
@@ -135,5 +123,21 @@ class CodesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def code_params
       params.require(:code).permit(:code, :file_name)
+    end
+
+    def decrypt_code(code)
+      encryption = Encryption.find_by(code_id: @code.id, user_id: current_user.id)
+      private_key_file = `cat ~/.private_#{current_user.id}.pem`
+      private_key = OpenSSL::PKey::RSA.new(private_key_file)
+      key = private_key.private_decrypt(Base64.decode64(encryption.encryption_key))
+      iv = private_key.private_decrypt(Base64.decode64(encryption.encryption_iv))
+
+      cipher = OpenSSL::Cipher.new('aes-256-cbc')
+      cipher.decrypt
+      cipher.key = key
+      cipher.iv = iv
+
+      decrypted_code = cipher.update(Base64.decode64(code))
+      decrypted_code << cipher.final
     end
 end
