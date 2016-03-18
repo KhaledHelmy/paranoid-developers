@@ -6,8 +6,8 @@ class RegistrationsController < Devise::RegistrationsController
   def create
     super
     if resource.save
-      `openssl genrsa -out ~/.private.pem 2048`
-      generated_public_key = `openssl rsa -in ~/.private.pem -outform PEM -pubout`
+      `openssl genrsa -out ~/.private_#{resource.id}.pem 2048`
+      generated_public_key = `openssl rsa -in ~/.private_#{resource.id}.pem -outform PEM -pubout`
       resource.public_key = generated_public_key
       resource.save!
     end
