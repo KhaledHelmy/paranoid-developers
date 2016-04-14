@@ -1,5 +1,2 @@
-<h1>Welcome</h1>
-<% if user_signed_in? %>
-	<%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
-	<%= link_to('List All Codes', codes_path) %>
-<% end %>
+<%= link_to 'List All Codes', codes_path, class: "btn btn-danger btn-lg", style: "width: 30%"%>
+

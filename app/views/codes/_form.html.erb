@@ -1,4 +1,4 @@
-<%= form_for(@code) do |f| %>
+<%= form_for @code, html: {class: "form-horizontal"} do |f| %>
   <% if @code.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@code.errors.count, "error") %> prohibited this code from being saved:</h2>
@@ -11,17 +11,22 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :file_name %><br>
-    <%= f.text_field :file_name %>
+  <div class="form-group">
+    <%= f.label :file_name, class: "col-lg-2 control-label" %>
+    <div class="col-lg-10">
+      <%= f.text_field :file_name, class: "form-control"  %>
+    </div>
+    
   </div>
 
-  <div class="field">
-    <%= f.label :code %><br>
-    <%= f.text_area :code %>
+  <div class="form-group">
+    <%= f.label :code, class: "col-lg-2 control-label" %>
+    <div class="col-lg-10">
+    <%= f.text_area :code, class: "form-control", rows: 9 %>
+    </div>
   </div>
 
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit 'Create', class: "btn btn-success pull-right" %>
   </div>
 <% end %>
