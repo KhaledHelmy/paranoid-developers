@@ -1,3 +1,31 @@
+<% content_for :javascript do %>
+  <%= javascript_include_tag "ace" %>
+  <script>
+    var textarea = $('#code_code').hide();
+    $("#editor").text(textarea.val());
+    var editor = ace.edit("editor");
+    editor.$blockScrolling = Infinity;
+    // editor.resize();
+    editor.getSession().on('change', function(e){
+      textarea.val(editor.getValue());
+    });
+  </script>
+<% end %>
+<% content_for :style do %>
+<style type="text/css" media="screen">
+    #editor {
+        min-height: 100px;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+    #editorContainer{
+      min-height: 100px;
+      resize: vertical;
+      overflow: auto;
+    }
+</style>
+<% end %>
 <%= form_for @code, html: {class: "form-horizontal"} do |f| %>
   <% if @code.errors.any? %>
     <div id="error_explanation">
@@ -21,8 +49,9 @@
 
   <div class="form-group">
     <%= f.label :code, class: "col-lg-2 control-label" %>
-    <div class="col-lg-10">
-    <%= f.text_area :code, class: "form-control", rows: 9 %>
+    <div class="col-lg-10" id="editorContainer">
+      <%= f.text_area :code, class: "form-control", rows: 9 %>
+      <div id="editor"></div>
     </div>
   </div>
 

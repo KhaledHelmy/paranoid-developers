@@ -3,6 +3,7 @@
 <head>
   <title>ParanoidDevelopers</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= yield :style %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
  
@@ -17,7 +18,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Paranoid Developers</a>
+      <a class="navbar-brand" href="/">Paranoid Developers</a>
     </div>
 
       <ul class="nav navbar-nav navbar-right">
@@ -50,4 +51,5 @@
 	</div>
 
 </body>
+<%= yield :javascript %>
 </html>
