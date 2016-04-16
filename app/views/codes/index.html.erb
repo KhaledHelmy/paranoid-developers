@@ -16,7 +16,7 @@
       <tr>
         <td><h5><%= code.file_name %></h5></td>
         <td><h5><%= code.user.email %></h5></td>
-        <td><%= link_to 'Show', code, class: "btn btn-info btn-sm" %></td>
+        <td><%= link_to 'Show', code, class: "btn btn-info btn-sm", "data-no-turbolink" => true %></td>
         <td><%= link_to 'Edit', edit_code_path(code), class: "btn btn-info btn-sm", "data-no-turbolink" => true %></td>
         <td><%= link_to 'Delete', code, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger btn-sm" %></td>
       </tr>

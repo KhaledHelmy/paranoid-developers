@@ -2,5 +2,5 @@
 
 <%= render partial: 'form', locals: {readOnly: false} %>
 
-<%= link_to 'Show', @code ,class: "btn btn-primary btn-sm" %> 
+<%= link_to 'Show', @code ,class: "btn btn-primary btn-sm", "data-no-turbolink" => true %> 
 <%= link_to 'Back', codes_path ,class: "btn btn-primary btn-sm"%>
