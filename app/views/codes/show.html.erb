@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<%= render 'form' %>
+<%= render partial: 'form', locals: {readOnly: true} %>
 
 <%= link_to 'Edit', edit_code_path(@code) ,class: "btn btn-primary btn-sm", "data-no-turbolink" => true %> 
 <%= link_to 'Back', codes_path ,class: "btn btn-primary btn-sm" %>

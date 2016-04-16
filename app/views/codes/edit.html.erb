@@ -1,6 +1,6 @@
 <h1>Editing Code</h1>
 
-<%= render 'form' %>
+<%= render partial: 'form', locals: {readOnly: false} %>
 
 <%= link_to 'Show', @code ,class: "btn btn-primary btn-sm" %> 
 <%= link_to 'Back', codes_path ,class: "btn btn-primary btn-sm"%>
