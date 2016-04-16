@@ -75,7 +75,11 @@
   <div class="form-group">
     <%= f.label :file_name, class: "col-lg-2 control-label" %>
     <div class="col-lg-10">
+      <% unless readOnly %>
       <%= f.text_field :file_name, class: "form-control"  %>
+      <% else %>
+      <%= f.label :file_name, class: "form-control"  %>
+      <% end %>
     </div>
     
   </div>
@@ -133,8 +137,9 @@
       <div id="editor"></div>
     </div>
   </div>
-
+<% unless readOnly %>
   <div class="actions">
     <%= f.submit 'Post', class: "btn btn-success pull-right" %>
   </div>
+<% end %>
 <% end %>
