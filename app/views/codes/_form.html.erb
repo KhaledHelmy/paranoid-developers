@@ -5,10 +5,40 @@
     $("#editor").text(textarea.val());
     var editor = ace.edit("editor");
     editor.$blockScrolling = Infinity;
-    // editor.resize();
     editor.getSession().on('change', function(e){
       textarea.val(editor.getValue());
     });
+    $('#mode').on('change', function(){
+      var newMode = $("#mode").val();
+      if(!newMode)
+        return;
+      editor.getSession().setMode({
+          path: "ace/mode/" + newMode,
+          v: Date.now()
+      });
+    });
+    var fontChange = function(){
+      var fontFamily = function(){
+        var newFamily = $("#family").val();
+        if(!newFamily)
+          "";
+        return newFamily;
+      };
+      var fontSize = function(){
+        var newSize = $("#size").val();
+        if(!newSize)
+          "";
+        return newSize + "px";
+      };
+      editor.setOptions({
+        fontFamily: fontFamily(),
+        fontSize: fontSize()
+      });
+    };
+    $("#family").on('change', fontChange);
+    $("#size").on('change', fontChange);
+    $("#defaultFamily").val($("#editor").css('font-family'));
+    $("#defaultSize").val($("#editor").css('font-size'));
   </script>
 <% end %>
 <% content_for :style do %>
@@ -50,6 +80,52 @@
   <div class="form-group">
     <%= f.label :code, class: "col-lg-2 control-label" %>
     <div class="col-lg-10" id="editorContainer">
+      <select id="mode">
+        <option value="c_cpp">C/C++</option>
+        <option value="csharp">C#</option>
+        <option value="css">CSS</option>
+        <option value="html">HTML</option>
+        <option value="java">JAVA</option>
+        <option value="javascript">JAVASCRIPT</option>
+        <option value="php">PHP</option>
+        <option value="plain_text">PLAIN TEXT</option>
+        <option value="python">PYTHON</option>
+        <option value="ruby">RUBY</option>
+        <option value="" selected="selected"
+        >TEXT</option>
+      </select>
+      <select id="family">
+        <option id="defaultFamily">Default</option>
+        <optgroup label="Serif">
+          <option value="Georgia, serif">Georgia</option>
+          <option value="'Palatino Linotype', 'Book Antiqua', Palatino, serif">Palatino Linotype</option>
+          <option value="'Times New Roman', Times, serif">Times New Roman</option>
+        </optgroup>
+        <optgroup label="Sans-Serif">
+          <option value="Arial, Helvetica, sans-serif">Arial</option>
+          <option value="'Arial Black', Gadget, sans-serif">Arial Black</option>
+          <option value="'Comic Sans MS', cursive, sans-serif">Comic Sans MS</option>
+          <option value="Impact, Charcoal, sans-serif">Impact</option>
+          <option value="'Lucida Sans Unicode', 'Lucida Grande', sans-serif">Lucida Sans Unicode</option>
+          <option value="Tahoma, Geneva, sans-serif">Tahoma</option>
+          <option value="'Trebuchet MS', Helvetica, sans-serif">Trebuchet MS</option>
+          <option value="Verdana, Geneva, sans-serif">Verdana</option>
+        </optgroup>
+        <optgroup label="Monospace">
+          <option value="'Courier New', Courier, monospace">Courier New</option>
+          <option value="'Lucida Console', Monaco, monospace">Lucida Console</option>
+        </optgroup>
+      </select>
+      <select id="size">
+        <option id="defaultSize">Default</option>
+        <option>8</option>
+        <option>10</option>
+        <option>12</option>
+        <option>14</option>
+        <option>16</option>
+        <option>18</option>
+        <option>20</option>
+      </select>
       <%= f.text_area :code, class: "form-control", rows: 9 %>
       <div id="editor"></div>
     </div>
