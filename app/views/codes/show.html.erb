@@ -1,19 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Code:</strong>
-  <%= @code.code %>
-</p>
-
-<!-- <p>
-  <strong>User:</strong>
-  <%= @code.user %>
-</p> -->
-
-<p>
-  <strong>File name:</strong>
-  <%= @code.file_name %>
-</p>
+<%= render 'form' %>
 
 <%= link_to 'Edit', edit_code_path(@code) ,class: "btn btn-primary btn-sm", "data-no-turbolink" => true %> 
 <%= link_to 'Back', codes_path ,class: "btn btn-primary btn-sm" %>
