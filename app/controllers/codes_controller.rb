@@ -8,12 +8,16 @@ class CodesController < ApplicationController
   # GET /codes.json
   def index
     @codes = Code.all
+    @codes.each do |code|
+      code.file_name = decrypt_method(code.id, code.file_name)
+    end
   end
 
   # GET /codes/1
   # GET /codes/1.json
   def show
-    @code.code = decrypt_code(@code.code)
+    @code.code = decrypt_method(@code.id, @code.code)
+    @code.file_name = decrypt_method(@code.id, @code.file_name)
   end
 
   # GET /codes/new
@@ -23,7 +27,8 @@ class CodesController < ApplicationController
 
   # GET /codes/1/edit
   def edit
-    @code.code = decrypt_code(@code.code)
+    @code.code = decrypt_method(@code.id, @code.code)
+    @code.file_name = decrypt_method(@code.id, @code.file_name)
   end
 
   # POST /codes
@@ -43,6 +48,15 @@ class CodesController < ApplicationController
     encrypted_code = cipher.update(@code.code)
     encrypted_code << cipher.final
     @code.code = Base64.encode64(encrypted_code)
+
+    cipher = OpenSSL::Cipher::Cipher.new('aes-256-cbc')
+    cipher.encrypt
+    cipher.key = key
+    cipher.iv = iv
+
+    encrypted_file_name = cipher.update(@code.file_name)
+    encrypted_file_name << cipher.final
+    @code.file_name = Base64.encode64(encrypted_file_name)
 
     respond_to do |format|
       if @code.save
@@ -87,6 +101,15 @@ class CodesController < ApplicationController
       encrypted_code << cipher.final
       code_param[:code] = Base64.encode64(encrypted_code)
 
+      cipher = OpenSSL::Cipher::Cipher.new('aes-256-cbc')
+      cipher.encrypt
+      cipher.key = key
+      cipher.iv = iv
+
+      encrypted_file_name = cipher.update(code_param[:file_name])
+      encrypted_file_name << cipher.final
+      code_param[:file_name] = Base64.encode64(encrypted_file_name)
+
       if @code.update(code_param)
         User.all.each do |user|
           public_key = OpenSSL::PKey::RSA.new(user.public_key)
@@ -125,8 +148,8 @@ class CodesController < ApplicationController
       params.require(:code).permit(:code, :file_name)
     end
 
-    def decrypt_code(code)
-      encryption = Encryption.find_by(code_id: @code.id, user_id: current_user.id)
+    def decrypt_method(code_id, encrypted_text)
+      encryption = Encryption.find_by(code_id: code_id, user_id: current_user.id)
       private_key_file = `cat ~/.private_#{current_user.id}.pem`
       private_key = OpenSSL::PKey::RSA.new(private_key_file)
       key = private_key.private_decrypt(Base64.decode64(encryption.encryption_key))
@@ -137,7 +160,7 @@ class CodesController < ApplicationController
       cipher.key = key
       cipher.iv = iv
 
-      decrypted_code = cipher.update(Base64.decode64(code))
-      decrypted_code << cipher.final
+      decrypted_text = cipher.update(Base64.decode64(encrypted_text))
+      decrypted_text << cipher.final
     end
 end
