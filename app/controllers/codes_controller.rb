@@ -9,15 +9,15 @@ class CodesController < ApplicationController
   def index
     @codes = Code.all
     @codes.each do |code|
-      code.file_name = decrypt_method(code.id, code.file_name)
+      code.file_name = get_verified_decryption(code.id, code.file_name)
     end
   end
 
   # GET /codes/1
   # GET /codes/1.json
   def show
-    @code.code = decrypt_method(@code.id, @code.code)
-    @code.file_name = decrypt_method(@code.id, @code.file_name)
+    @code.code = get_verified_decryption(@code.id, @code.code)
+    @code.file_name = get_verified_decryption(@code.id, @code.file_name)
   end
 
   # GET /codes/new
@@ -27,8 +27,8 @@ class CodesController < ApplicationController
 
   # GET /codes/1/edit
   def edit
-    @code.code = decrypt_method(@code.id, @code.code)
-    @code.file_name = decrypt_method(@code.id, @code.file_name)
+    @code.code = get_verified_decryption(@code.id, @code.code)
+    @code.file_name = get_verified_decryption(@code.id, @code.file_name)
   end
 
   # POST /codes
@@ -89,7 +89,7 @@ class CodesController < ApplicationController
 
       encryption = Encryption.find_by(code_id: @code.id, user_id: current_user.id)
       private_key_file = `cat ~/.private_#{current_user.id}.pem`
-      private_key = OpenSSL::PKey::RSA.new(private_key_file)
+      private_key = OpenSSL::PKey::RSA.new(private_key_file, session[:passphrase])
       key = private_key.private_decrypt(Base64.decode64(encryption.encryption_key))
 
       cipher = OpenSSL::Cipher::Cipher.new('aes-256-cbc')
@@ -148,10 +148,19 @@ class CodesController < ApplicationController
       params.require(:code).permit(:code, :file_name)
     end
 
+    def get_verified_decryption(code_id, encrypted_text)
+      original_text = encrypted_text
+      begin
+        decrypted_text = decrypt_method(code_id, encrypted_text)
+      rescue Exception
+        decrypted_text = original_text
+      end
+    end
+
     def decrypt_method(code_id, encrypted_text)
       encryption = Encryption.find_by(code_id: code_id, user_id: current_user.id)
       private_key_file = `cat ~/.private_#{current_user.id}.pem`
-      private_key = OpenSSL::PKey::RSA.new(private_key_file)
+      private_key = OpenSSL::PKey::RSA.new(private_key_file, session[:passphrase])
       key = private_key.private_decrypt(Base64.decode64(encryption.encryption_key))
       iv = private_key.private_decrypt(Base64.decode64(encryption.encryption_iv))
 

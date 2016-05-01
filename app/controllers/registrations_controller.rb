@@ -4,10 +4,13 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def create
+    passphrase = params[:user][:passphrase]
+    params[:user].delete :passphrase
+    session[:passphrase] = passphrase
     super
     if resource.save
-      `openssl genrsa -out ~/.private_#{resource.id}.pem 2048`
-      generated_public_key = `openssl rsa -in ~/.private_#{resource.id}.pem -outform PEM -pubout`
+      `openssl genrsa -des3 -passout pass:#{passphrase} -out ~/.private_#{resource.id}.pem 2048`
+      generated_public_key = `openssl rsa -in ~/.private_#{resource.id}.pem -passin pass:#{passphrase} -outform PEM -pubout`
       resource.public_key = generated_public_key
       resource.save!
     end
