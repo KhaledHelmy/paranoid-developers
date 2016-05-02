@@ -5,6 +5,9 @@ Rails.application.routes.draw do
     end
   end
   get 'welcome/index'
+  get 'access_code', to: "codes#give_access"
+  post 'access_code', to: "codes#give_access"
+  
 
   devise_for :users, :controllers => {:registrations => "registrations", :sessions => "sessions"}
   # The priority is based upon order of creation: first created -> highest priority.

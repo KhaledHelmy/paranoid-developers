@@ -80,6 +80,12 @@ class CodesController < ApplicationController
     end
   end
 
+  def give_access
+  @users = User.all
+
+  end
+
+
   # PATCH/PUT /codes/1
   # PATCH/PUT /codes/1.json
   def update
