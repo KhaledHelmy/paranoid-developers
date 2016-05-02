@@ -7,7 +7,7 @@ class CodesController < ApplicationController
   # GET /codes
   # GET /codes.json
   def index
-    @codes = Code.all
+    @codes = current_user.encrypted_codes
     @codes.each do |code|
       code.file_name = get_verified_decryption(code.id, code.file_name)
     end
