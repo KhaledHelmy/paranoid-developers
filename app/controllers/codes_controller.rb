@@ -3,11 +3,13 @@ require 'base64'
 
 class CodesController < ApplicationController
   before_action :set_code, only: [:show, :edit, :update, :destroy]
+  before_action :encrypted_codes, only: [:show, :edit, :update, :destroy, :destroy, :access, :index]
+  before_action :public_access, only: [:show, :edit, :update]
+  before_action :private_access, only: [:destroy, :access]
 
   # GET /codes
   # GET /codes.json
   def index
-    @codes = current_user.encrypted_codes
     @codes.each do |code|
       code.file_name = get_verified_decryption(code.id, code.file_name)
     end
@@ -164,6 +166,32 @@ class CodesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_code
       @code = Code.find(params[:id])
+    end
+
+    def encrypted_codes
+      @codes = current_user.encrypted_codes
+    end
+
+    def public_access
+      p @codes
+      p current_user
+      count = @codes.where(id: @code.id).count
+      if count == 0
+        respond_to do |format|
+          format.html { redirect_to :root }
+          format.json { render json: {status: :access_denied} }
+        end
+      end
+    end
+
+    def private_access
+      count = @codes.where(user_id: current_user.id).count
+      if count == 0
+        respond_to do |format|
+          format.html { redirect_to :root }
+          format.json { render json: {status: :access_denied} }
+        end
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
