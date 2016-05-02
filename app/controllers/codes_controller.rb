@@ -82,9 +82,24 @@ class CodesController < ApplicationController
 
   def give_access
   @users = User.all
+  
+   # Params[:user].each do |a ,z|
+   #  if z = 1 
+   #    userid = a 
 
-  end
+   # Encryption.new
+   #        encryption.code_id = @code.id
+   #        encryption.user_id = userid
+   #        encryption.encryption_key = encrypted_key
+   #        encryption.encryption_iv = encrypted_iv
+   #        encryption.save
 
+
+
+
+  #   end
+  #  end
+    end
 
   # PATCH/PUT /codes/1
   # PATCH/PUT /codes/1.json
