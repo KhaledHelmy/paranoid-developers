@@ -3,11 +3,10 @@ Rails.application.routes.draw do
     collection do
       get 'all', as: :all
     end
+    get 'access', on: :member
+    post 'access', on: :member
   end
   get 'welcome/index'
-  get 'access_code', to: "codes#give_access"
-  post 'access_code', to: "codes#give_access"
-  
 
   devise_for :users, :controllers => {:registrations => "registrations", :sessions => "sessions"}
   # The priority is based upon order of creation: first created -> highest priority.

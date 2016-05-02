@@ -80,26 +80,22 @@ class CodesController < ApplicationController
     end
   end
 
-  def give_access
-  @users = User.all
-  
-   # Params[:user].each do |a ,z|
-   #  if z = 1 
-   #    userid = a 
+  def access
+    @users = User.where.not(id: current_user.id)
+    if request.post?
+     # Params[:user].each do |a ,z|
+     #  if z = 1 
+     #    userid = a 
 
-   # Encryption.new
-   #        encryption.code_id = @code.id
-   #        encryption.user_id = userid
-   #        encryption.encryption_key = encrypted_key
-   #        encryption.encryption_iv = encrypted_iv
-   #        encryption.save
-
-
-
-
-  #   end
-  #  end
+     # Encryption.new
+     #        encryption.code_id = @code.id
+     #        encryption.user_id = userid
+     #        encryption.encryption_key = encrypted_key
+     #        encryption.encryption_iv = encrypted_iv
+     #        encryption.save
+     redirect_to codes_path
     end
+  end
 
   # PATCH/PUT /codes/1
   # PATCH/PUT /codes/1.json
