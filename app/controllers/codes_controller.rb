@@ -84,7 +84,7 @@ class CodesController < ApplicationController
     if request.post?
       params[:user].each do |user_id, access|
         code_id = params[:id]
-        if access == 1
+        if access == "1"
           public_key = OpenSSL::PKey::RSA.new(User.find(user_id).public_key)
           symmetric_key = retrieve_symmetric_key(code_id)
           encrypted_key = Base64.encode64(public_key.public_encrypt(symmetric_key[:key]))
