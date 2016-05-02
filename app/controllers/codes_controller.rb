@@ -133,7 +133,8 @@ class CodesController < ApplicationController
       code_param[:file_name] = Base64.encode64(encrypted_file_name)
 
       if @code.update(code_param)
-        User.all.each do |user|
+        users = Encryption.where(code_id: @code.id).pluck(:user_id)
+        User.where(id: users).each do |user|
           public_key = OpenSSL::PKey::RSA.new(user.public_key)
           encrypted_iv = Base64.encode64(public_key.public_encrypt(iv))
           encryption = Encryption.find_by(code_id: @code.id, user_id: user.id)
