@@ -180,7 +180,7 @@ class CodesController < ApplicationController
       count = @codes.where(id: @code.id).count
       if count == 0
         respond_to do |format|
-          format.html { redirect_to :root, notice: 'Access Deied.' }
+          format.html { redirect_to :root, notice: 'Access Denied.' }
           format.json { render json: {status: :access_denied} }
         end
       end
@@ -190,7 +190,7 @@ class CodesController < ApplicationController
       count = @codes.where(user_id: current_user.id).count
       if count == 0
         respond_to do |format|
-          format.html { redirect_to :root, notice: 'Access Deied.' }
+          format.html { redirect_to :root, notice: 'Access Denied.' }
           format.json { render json: {status: :access_denied} }
         end
       end
