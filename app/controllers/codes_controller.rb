@@ -3,11 +3,13 @@ require 'base64'
 
 class CodesController < ApplicationController
   before_action :set_code, only: [:show, :edit, :update, :destroy]
+  before_action :encrypted_codes, only: [:show, :edit, :update, :destroy, :destroy, :access, :index]
+  before_action :public_access, only: [:show, :edit, :update]
+  before_action :private_access, only: [:destroy, :access]
 
   # GET /codes
   # GET /codes.json
   def index
-    @codes = Code.all
     @codes.each do |code|
       code.file_name = get_verified_decryption(code.id, code.file_name)
     end
@@ -60,23 +62,49 @@ class CodesController < ApplicationController
 
     respond_to do |format|
       if @code.save
-        User.all.each do |user|
-          public_key = OpenSSL::PKey::RSA.new(user.public_key)
-          encrypted_key = Base64.encode64(public_key.public_encrypt(key))
-          encrypted_iv = Base64.encode64(public_key.public_encrypt(iv))
-          encryption = Encryption.new
-          encryption.code_id = @code.id
-          encryption.user_id = user.id
-          encryption.encryption_key = encrypted_key
-          encryption.encryption_iv = encrypted_iv
-          encryption.save
-        end
+        public_key = OpenSSL::PKey::RSA.new(current_user.public_key)
+        encrypted_key = Base64.encode64(public_key.public_encrypt(key))
+        encrypted_iv = Base64.encode64(public_key.public_encrypt(iv))
+        encryption = Encryption.new
+        encryption.code_id = @code.id
+        encryption.user_id = current_user.id
+        encryption.encryption_key = encrypted_key
+        encryption.encryption_iv = encrypted_iv
+        encryption.save
+
         format.html { redirect_to @code, notice: 'Code was successfully created.' }
         format.json { render :show, status: :created, location: @code }
       else
         format.html { render :new }
         format.json { render json: @code.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def access
+    @users = User.where.not(id: current_user.id)
+    code_id = params[:id]
+    if request.post?
+      params[:user].each do |user_id, access|
+        if access == "1"
+          public_key = OpenSSL::PKey::RSA.new(User.find(user_id).public_key)
+          symmetric_key = retrieve_symmetric_key(code_id)
+          encrypted_key = Base64.encode64(public_key.public_encrypt(symmetric_key[:key]))
+          encrypted_iv = Base64.encode64(public_key.public_encrypt(symmetric_key[:iv]))
+          Encryption.where({code_id: code_id, user_id: user_id}).destroy_all
+          encryption = Encryption.new
+          encryption.code_id = code_id
+          encryption.user_id = user_id
+          encryption.encryption_key = encrypted_key
+          encryption.encryption_iv = encrypted_iv
+          encryption.save
+        else
+          Encryption.where({code_id: code_id, user_id: user_id}).destroy_all
+        end
+      end
+     redirect_to codes_path
+    else
+      @hasAccess = Encryption.where(code_id: code_id).pluck(:user_id)
     end
   end
 
@@ -87,10 +115,8 @@ class CodesController < ApplicationController
       code_param = code_params
       code_param[:user_id] = current_user.id
 
-      encryption = Encryption.find_by(code_id: @code.id, user_id: current_user.id)
-      private_key_file = `cat ~/.private_#{current_user.id}.pem`
-      private_key = OpenSSL::PKey::RSA.new(private_key_file, session[:passphrase])
-      key = private_key.private_decrypt(Base64.decode64(encryption.encryption_key))
+      symmetric_key = retrieve_symmetric_key(@code.id)
+      key = symmetric_key[:key]
 
       cipher = OpenSSL::Cipher::Cipher.new('aes-256-cbc')
       cipher.encrypt
@@ -111,7 +137,8 @@ class CodesController < ApplicationController
       code_param[:file_name] = Base64.encode64(encrypted_file_name)
 
       if @code.update(code_param)
-        User.all.each do |user|
+        users = Encryption.where(code_id: @code.id).pluck(:user_id)
+        User.where(id: users).each do |user|
           public_key = OpenSSL::PKey::RSA.new(user.public_key)
           encrypted_iv = Base64.encode64(public_key.public_encrypt(iv))
           encryption = Encryption.find_by(code_id: @code.id, user_id: user.id)
@@ -143,6 +170,32 @@ class CodesController < ApplicationController
       @code = Code.find(params[:id])
     end
 
+    def encrypted_codes
+      @codes = current_user.encrypted_codes
+    end
+
+    def public_access
+      p @codes
+      p current_user
+      count = @codes.where(id: @code.id).count
+      if count == 0
+        respond_to do |format|
+          format.html { redirect_to :root, notice: 'Access Denied.' }
+          format.json { render json: {status: :access_denied} }
+        end
+      end
+    end
+
+    def private_access
+      count = @codes.where(user_id: current_user.id).count
+      if count == 0
+        respond_to do |format|
+          format.html { redirect_to :root, notice: 'Access Denied.' }
+          format.json { render json: {status: :access_denied} }
+        end
+      end
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def code_params
       params.require(:code).permit(:code, :file_name)
@@ -158,11 +211,9 @@ class CodesController < ApplicationController
     end
 
     def decrypt_method(code_id, encrypted_text)
-      encryption = Encryption.find_by(code_id: code_id, user_id: current_user.id)
-      private_key_file = `cat ~/.private_#{current_user.id}.pem`
-      private_key = OpenSSL::PKey::RSA.new(private_key_file, session[:passphrase])
-      key = private_key.private_decrypt(Base64.decode64(encryption.encryption_key))
-      iv = private_key.private_decrypt(Base64.decode64(encryption.encryption_iv))
+      symmetric_key = retrieve_symmetric_key(code_id)
+      key = symmetric_key[:key]
+      iv = symmetric_key[:iv]
 
       cipher = OpenSSL::Cipher.new('aes-256-cbc')
       cipher.decrypt
@@ -171,5 +222,19 @@ class CodesController < ApplicationController
 
       decrypted_text = cipher.update(Base64.decode64(encrypted_text))
       decrypted_text << cipher.final
+    end
+
+    def retrieve_symmetric_key(code_id)
+      encryption = Encryption.find_by(code_id: code_id, user_id: current_user.id)
+      private_key = retrieve_private_key()
+      symmetric_key = {}
+      symmetric_key[:key] = private_key.private_decrypt(Base64.decode64(encryption.encryption_key))
+      symmetric_key[:iv] = private_key.private_decrypt(Base64.decode64(encryption.encryption_iv))
+      symmetric_key
+    end
+
+    def retrieve_private_key()
+      private_key_file = `cat ~/.private_#{current_user.id}.pem`
+      private_key = OpenSSL::PKey::RSA.new(private_key_file, session[:passphrase])
     end
 end
