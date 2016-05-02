@@ -81,9 +81,9 @@ class CodesController < ApplicationController
 
   def access
     @users = User.where.not(id: current_user.id)
+    code_id = params[:id]
     if request.post?
       params[:user].each do |user_id, access|
-        code_id = params[:id]
         if access == "1"
           public_key = OpenSSL::PKey::RSA.new(User.find(user_id).public_key)
           symmetric_key = retrieve_symmetric_key(code_id)
@@ -101,6 +101,8 @@ class CodesController < ApplicationController
         end
       end
      redirect_to codes_path
+    else
+      @hasAccess = Encryption.where(code_id: code_id).pluck(:user_id)
     end
   end
 
