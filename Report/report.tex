@@ -1,0 +1,92 @@
+\documentclass[12pt, a4paper, oneside]{book}
+
+\usepackage[headings]{fullpage}
+\usepackage{setspace}
+
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{float}
+\usepackage{subfig}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{appendix}
+\usepackage{listings}
+\usepackage{todonotes}
+\usepackage[pdfborder={0 0 0}, colorlinks=true, linkcolor=black, citecolor=blue]{hyperref}
+\usepackage[printonlyused]{acronym}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{ifpdf}
+\usepackage{amsmath}
+
+\newcommand{\submissionDay}{24}
+\newcommand{\submissionMonth}{April}
+\newcommand{\submissionYear}{2016}
+\newcommand{\submissionDate}{\submissionDay~\submissionMonth,~\submissionYear}
+\newcommand{\typeOfThesis}{Project Report}
+\newcommand{\id}{25-1594}
+\newcommand{\tutorial}{T12}
+
+\newcommand{\titleOfThesisOne}{Computer and Network Security}
+
+\newcommand{\authorOfThesis}{Khaled Abdelmohsen}
+
+\newcommand{\includefig}[4]{
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=#1\textwidth]{graphics/#2}
+    \caption{#3}
+    \label{#4}
+  \end{figure}
+}
+
+\newcommand{\includefigWSC}[5]{
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=#1\textwidth]{graphics/#2}
+    \caption[#3]{#4}
+    \label{#5}
+  \end{figure}
+}
+
+\newcommand{\includeeps}[4]{
+  \includefig{#1}{#2.eps}{#3}{#4}
+}
+
+\newcommand{\includeepsWSC}[5]{
+  \includefigWSC{#1}{#2.eps}{#3}{#4}{#5}
+}
+
+\ifpdf
+\pdfinfo {
+  /Author (\authorOfThesis)
+  /Title (\titleOfThesisOne)
+  /Subject (\typeOfThesis)
+  /Keywords ()
+  /CreationDate (D:20150715222000)
+}
+\fi
+
+\begin{document}
+\pagestyle{plain}
+\pagenumbering{Roman}
+
+\include{content/title}
+
+\tableofcontents
+
+\pagestyle{headings}
+\pagenumbering{arabic}
+
+\setlength\parskip{.5\baselineskip plus .2\baselineskip minus .4\baselineskip}
+
+\include{content/summary}
+\include{content/design_choices}
+\include{content/comparison}
+\include{content/attack_scenarios}
+\include{content/techniques}
+\include{content/libraries}
+\include{content/references}
+
+\end{document}
