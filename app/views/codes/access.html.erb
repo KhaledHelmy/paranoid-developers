@@ -12,7 +12,7 @@
     <% @users.each do |user| %>
       <tr>
         <td><h5><%= user.email %></h5></td>
-        <td> <%= check_box("user", user.id, {checked: false}) %></td>
+        <td> <%= check_box("user", user.id, {checked: @hasAccess.include?(user.id)}) %></td>
      </tr>
     <% end %>
   </tbody>
