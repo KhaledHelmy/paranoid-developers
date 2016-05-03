@@ -1,13 +1,41 @@
 \chapter{Design Choices}
 
-The security system architecture used in the project can be divided into 3 stages.
+The security system architecture used in the project can be divided into the following components.
 
-\section{Stage 1: User Registration}
+\section{Component 1: User Registration}
 
-The first stage of security starts when users sign up on the system. The user enters their \textbf{email}, a \textbf{password} and a \textbf{passphrase} while signing up. The system then generate and public-private key pair specific for that user using the entered passphrase as a password for protecting the user's private key. The user's email and \textbf{hashed} password along with the user's generated public key are saved in the database. The private key is saved in the server local files protected with the passphrase while the passphrase is not saved any where in the system.
+It starts when users sign up on the system. The user enters their \textbf{email}, a \textbf{password} and a \textbf{passphrase} while signing up. The system then generate and public-private key pair specific for that user using the entered passphrase as a password for protecting the user's private key. The user's email and \textbf{hashed} password along with the user's generated public key are saved in the database. The private key is saved in the server local files protected with the passphrase while the passphrase is not saved any where in the system.
 
-\section{Stage 2: Code Submission}
+This method is used as it benefits from asymmetric encryption where there would be 2 keys in the process in which the loss of one of them would never affect the other.
 
-The second stages comes when a user try to create a new code file. The user states the name of the code file and the content for the code. After the user submits these information, the system retrieves the private key using 
+\section{Component 2: Code Submission}
 
-\section{Stage 3: Code Retrieval}
+It comes when a user try to create a new code file. The user states the name of the code file and the content for the code. After the user submits these information, the system generates a random \textbf{key} and a random \textbf{initialization vector} to be used in the \textbf{AES 256 CBC} symmetric encryption for the code. Afterwards, the system retrieves the user's public key from the database to use it for encrypting the generated key and initialization vector and saving them in the database.
+
+This method is called \textbf{Pretty Good Privacy (PGP)} where it provides an extra security for data exchange. It uses symmetric encryption for fast encryption of large data like codes and it also uses asymmetric encryption for secure saving of the symmetric key used. As a result, submitted codes would be saved encrypted in the database.
+
+\section{Component 3: Code Retrieval}
+
+It comes when a user tries to access a code on the system. There are 3 possibilities at this point.
+
+\begin{itemize}
+	\item \textbf{Code Owner:} They have access to all operations on their code files such as show, edit, give access and delete.
+	\item \textbf{Authorized Developer:} They have access to restricted operations such as show and edit.
+	\item \textbf{Unauthorized Developer:} Codes would not be visible such that unauthorized developers would not have access to any operation.
+\end{itemize}
+
+The \textbf{show} operation require decrypting the request code which is done through the following process. The system retrieves the private key for the user making the request using the passphrase entered by the user at login time. It uses the private key to decrypt the symmetric key and initialization vector from the database. It uses the key and initialization vector to decrypt the requested code and show it to the user.
+
+This method is used as it uses the private key to decrypt the symmetric keys where the private key is not accessible to anyone but the user themselves so it provides a secure layer for the keys used to decrypt the requested code.
+
+\section{Component 4: Code Editing}
+
+It starts when a code owner or an authorized developer tries to edit a code. The operation is done over 2 stages.
+
+Stage 1 requires retrieving and decrypting the code which is done through retrieving the user's private key using the passphrase entered at login time. Then, the private key is used to decrypt the symmetric keys and then they would get used to decrypt the code and show it to the user for editing.
+
+Stage 2 happens after the user performs edits on the code and submits the code to be saved in the database. After the edits, the system generates a new random \textbf{initialization vector} in addition to the old key and re-encrypts the code to be saved in the database. The system then re-encrypts the new initialization vector using the public keys of the code owner and all authorized developers.
+
+This method is used as it generates a new initialization vector for code edits in order to disable the possibility of generating patterns while encrypting the code.
+
+\section{Component 5: Granting Access}
