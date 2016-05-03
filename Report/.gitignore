@@ -1,2 +1,10 @@
 .texpadtmp
 report.pdf
+*.log
+*.aux
+*.toc
+*.lof
+*.lot
+*.out
+*.bbl
+*.blg
