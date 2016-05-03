@@ -1,1 +1,11 @@
 \chapter{Design Choices}
+
+The security system architecture used in the project can be divided into 3 stages.
+
+\section{Stage 1: User Registration}
+
+The first stage of security starts when users sign up on the system. The user enters their \textbf{email}, a \textbf{password} and a \textbf{passphrase} while signing up. The system then generate and public-private key pair specific for that user using the entered passphrase as a password for protecting the user's private key. The user's email and \textbf{hashed} password along with the user's generated public key are saved in the database. The private key is saved in the server local files protected with the passphrase while the passphrase is not saved any where in the system.
+
+\section{Stage 2: Code Submission}
+
+\section{Stage 3: Code Retrieval}

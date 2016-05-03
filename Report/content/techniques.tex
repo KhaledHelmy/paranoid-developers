@@ -17,7 +17,7 @@ It does a lot processing.
 	\item Each block of the plain text passes through 14 repetition rounds of a certain set of operations.
 \end{itemize}
 
-\section{Public-key cryptography}
+\section{Public-Key Cryptography}
 Public-key cryptography, or asymmetric cryptography, is a cryptographic system that uses two kinds of keys, public keys that can be spread widely, while private keys are known only to the owner. In a public-key encryption system, any person can encrypt a message using the public key of the receiver, but such a message can be decrypted only with the receiver's private key. The strength of a public-key cryptography system relies on the degree of difficulty (computational impracticality) for a properly generated private key to be determined from its corresponding public key.
 \subsection{Advantages}
 \begin{itemize}
@@ -33,7 +33,7 @@ Public-key cryptography, or asymmetric cryptography, is a cryptographic system t
 	\item Usually used only for small blocks of data, typically the transfer of a symmetric encryption key.
 \end{itemize}
 
-\section{The Project}
+\section{Project}
 In our implementation we use the combination of AES and Public-key cryptography to encrypt the content of the files.
 Each user generates the pair public and private key and saves the his public key in the database, so that everyone can use it. Given that the private key is generated using a passphrase which must be entered every time the private key is used to increase the security.
 First we encrypt the content of the file using AES-256-CBC using randomly generated key and initialization vector and store them in the database. Now no one can know the content of the file unless they have these randomly generated items which are not stored anywhere yet. After the encrypted file has been stored in the database we use the public key of the users that are authorized to use that file to encrypt the randomly generated items.
@@ -44,5 +44,6 @@ First we encrypt the content of the file using AES-256-CBC using randomly genera
 \end{itemize}
 \subsection{Disadvantages}
 \begin{itemize}
-	\item Once an attacker got access to the server's local files he can get through all the codes easily since the public and private key are stored there.
+	\item Once an attacker got access to the server's local files, they would have access to a list of \textbf{encrypted} private keys. Although, the keys are encrypted, the attacker might be able to break one of these keys using brute-force attacks.
+	\item If a user forgot the passphrase to their keys, they have no way of retrieving it.
 \end{itemize}

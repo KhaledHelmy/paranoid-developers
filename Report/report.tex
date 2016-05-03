@@ -58,6 +58,9 @@
   \includefigWSC{#1}{#2.eps}{#3}{#4}{#5}
 }
 
+% \renewcommand{\baselinestretch}{1.5}
+\renewcommand\bibname{References}
+
 \ifpdf
 \pdfinfo {
   /Author (\authorOfThesis)
@@ -87,6 +90,10 @@
 \include{content/attack_scenarios}
 \include{content/techniques}
 \include{content/libraries}
-\include{content/references}
+
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{content/report}
+\addcontentsline{toc}{chapter}{References}
 
 \end{document}

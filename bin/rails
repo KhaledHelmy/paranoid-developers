@@ -1,4 +1,28 @@
 #!/usr/bin/env ruby
+
+require 'rubygems'
+require 'rails/commands/server'
+require 'rack'
+require 'webrick'
+require 'webrick/https'
+
+# Run using: SSL=true rails s
+module Rails
+  class Server < ::Rack::Server
+    def default_options
+      ssl_default_options = {
+        :Port => 3001,
+        :SSLEnable => true,
+        :SSLVerifyClient => OpenSSL::SSL::VERIFY_NONE,
+        :SSLPrivateKey => OpenSSL::PKey::RSA.new(File.open(File.expand_path('../../config/cert/server.key', __FILE__)).read),
+        :SSLCertificate => OpenSSL::X509::Certificate.new(File.open(File.expand_path('../../config/cert/server.crt', __FILE__)).read),
+        :SSLCertName => [['CN', WEBrick::Utils::getservername]]
+      }
+      ENV['SSL'] ? super.merge(ssl_default_options) : super
+    end
+  end
+end
+
 begin
   load File.expand_path('../spring', __FILE__)
 rescue LoadError => e
