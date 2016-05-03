@@ -3,7 +3,7 @@ require 'base64'
 
 class CodesController < ApplicationController
   before_action :set_code, only: [:show, :edit, :update, :destroy]
-  before_action :encrypted_codes, only: [:show, :edit, :update, :destroy, :destroy, :access, :index]
+  before_action :encrypted_codes, only: [:show, :edit, :update, :destroy, :access, :index]
   before_action :public_access, only: [:show, :edit, :update]
   before_action :private_access, only: [:destroy, :access]
 
