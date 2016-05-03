@@ -1,7 +1,11 @@
 \chapter{Computer Security Techniques Used}
 %Explanation of each computer security technique you used along with its advantages/disadvantages trade-offs.
 \section{AES}
-The Advanced Encryption Standard (AES) is an encryption algorithm used to encrypt electronic data using a piece of text called \textbf{encryption key}. AES encrypts each chunk of data separately, these chunks have fixed-length group of bits called \textbf{blocks}, the size of a block is the number of bits used to represent this block, each block size is 128 bit, while the key could be of three different sizes 128, 192 and 256 bits, a key of size 256 is the one use in this project. AES is a symmetric-key algorithm, meaning that the key used in encryption is the one that should be used in decryption. The encrypted text is also known as the cipher text, while the text to be encrypted also known as the plain text. In order to accommodate the fixed size of the plain text that could be encrypted using AES, several \textbf{mode of operation}s were invented, each of them cuts the \textbf{plain text} to blocks were each block is fed to a different AES, the advanced \textbf{mode of operation}s use the resulted encrypted text of the previous AES in different ways with the next block to be encrypted and the key. The simplest of the encryption modes is the Electronic Codebook (ECB) mode. The message is divided into blocks, and each block is encrypted separately, the disadvantage of this method is that identical plaintext blocks are encrypted into identical cipher text blocks thus, it does not hide data patterns well, in some senses, it doesn't provide serious message confidentiality. The \textbf{mode of operation} used in this project is Cipher Block Chaining (CBC). In CBC mode, each block of plaintext is XORed with the previous encrypted text block before being encrypted. This way, each encrypted text block depends on all plaintext blocks processed up to that point. To make each message unique, an initialization vector must be used in the first block.
+\par The Advanced Encryption Standard (AES) is an encryption algorithm used to encrypt electronic data using a piece of text called \textbf{encryption key}. AES encrypts each chunk of data separately, these chunks have fixed-length group of bits called \textbf{blocks}, the size of a block is the number of bits used to represent this block, each block size is 128 bit, while the key could be of three different sizes 128, 192 and 256 bits, a key of size 256 is the one use in this project.
+\par AES is a symmetric-key algorithm, meaning that the key used in encryption is the one that is used in decryption. The encrypted text is also known as the cipher text, while the text to be encrypted also known as the plain text.
+\par In order to accommodate the fixed size of the plain text that could be encrypted using AES, several \textbf{mode of operation}s were invented, each of them cuts the \textbf{plain text} to blocks were each block is fed to a different AES, the advanced \textbf{mode of operation}s use the resulted encrypted text of the previous AES in different ways with the next block to be encrypted and the key.
+\par The simplest of the encryption modes is the Electronic Codebook (ECB) mode. The message is divided into blocks, and each block is encrypted separately, the disadvantage of this method is that identical plaintext blocks are encrypted into identical cipher text blocks thus, it does not hide data patterns well, in some senses, it doesn't provide serious message confidentiality.
+\par The \textbf{mode of operation} used in this project is Cipher Block Chaining (CBC). In CBC mode, each block of plaintext is XORed with the previous encrypted text block before being encrypted. This way, each encrypted text block depends on all plaintext blocks processed up to that point. To make each message unique, an initialization vector must be used in the first block.
 \pagebreak
 \subsection{Advantages}
 \begin{itemize}
@@ -34,9 +38,9 @@ Public-key cryptography, or asymmetric cryptography, is a cryptographic system t
 \end{itemize}
 
 \section{Project}
-In our implementation we use the combination of AES and Public-key cryptography to encrypt the content of the files.
-Each user generates the pair public and private key and saves the his public key in the database, so that everyone can use it. Given that the private key is generated using a passphrase which must be entered every time the private key is used to increase the security.
-First we encrypt the content of the file using AES-256-CBC using randomly generated key and initialization vector and store them in the database. Now no one can know the content of the file unless they have these randomly generated items which are not stored anywhere yet. After the encrypted file has been stored in the database we use the public key of the users that are authorized to use that file to encrypt the randomly generated items.
+\par In our implementation we use the combination of AES and Public-key cryptography to encrypt the content of the files.
+\par Each user generates the pair public and private key and saves the his public key in the database, so that everyone can use it. Given that the private key is generated using a passphrase which must be entered every time the private key is used to increase the security.
+\par First we encrypt the content of the file using AES-256-CBC using randomly generated key and initialization vector and store them in the database. Now no one can know the content of the file unless they have these randomly generated items which are not stored anywhere yet. After the encrypted file has been stored in the database we use the public key of the users that are authorized to use that file to encrypt the randomly generated items.
 \subsection{Advantages}
 \begin{itemize}
 	\item The content of the files are safe even from the database administrators.
@@ -47,3 +51,37 @@ First we encrypt the content of the file using AES-256-CBC using randomly genera
 	\item Once an attacker got access to the server's local files, they would have access to a list of \textbf{encrypted} private keys. Although, the keys are encrypted, the attacker might be able to break one of these keys using brute-force attacks.
 	\item If a user forgot the passphrase to their keys, they have no way of retrieving it.
 \end{itemize}
+
+\pagebreak
+
+\section{Cryptographic hash function}
+\par A cryptographic hash function is a mathematical algorithm that takes arbitrary input and produce a fixed-length string which is designed to also be one-way function, that is, a function which is infeasible to invert. The only way to recreate the input data from an ideal cryptographic hash function's output is to try a large number of possible inputs to see if they produce a match. \par
+One of it's applications is Password verification. Storing all user passwords as cleartext can result in a massive security breach if the password file is compromised. One way to reduce this danger is to only store the hash value of each password. To authenticate a user, the password presented by the user is hashed and compared with the stored hash. The password is often concatenated with a random, non-secret salt value before the hash function is applied. The salt is stored with the password hash. Because users have different salts, it is not feasible to store tables of precomputed hash values for common passwords. 
+\subsection{Advantages}
+The ideal cryptographic hash function has four main properties:
+\begin{itemize}
+	\item It is quick to compute the hash value for any given message.
+	\item It is infeasible to generate a message from its hash value except by trying all possible messages.
+	\item A small change to a message should change the hash value so extensively that the new hash value appears uncorrelated with the old hash value.
+	\item It is infeasible to find two different messages with the same hash value.
+\end{itemize}
+\subsection{Disadvantages}
+The only disadvantage known is that when used in password verification it prevents the original passwords from being retrieved if forgotten, and they have to be replaced with new ones.
+\pagebreak
+\section{SSL}
+\par Transport Layer Security (TLS) and its predecessor, Secure Sockets Layer (SSL), both of which are frequently referred to as "SSL", are cryptographic protocols that provide communications security over a computer network. SSL is in widespread use in applications such as web browsing, email, Internet faxing, instant messaging, and voice-over-IP (VoIP). Major web sites use TLS to secure all communications between their servers and web browsers.
+\par The primary goal of the TLS protocol is to provide privacy and data integrity between two communicating computer applications.
+\subsection{Advantages}
+When secured by TLS, connections between a client and a server have one or more of the following properties:
+\begin{itemize}
+	\item The connection is private because symmetric cryptography is used to encrypt the data transmitted. The keys for this symmetric encryption are generated uniquely for each connection and are based on a shared secret negotiated at the start of the session. The server and client negotiate the details of which encryption algorithm and cryptographic keys to use before the first byte of data is transmitted. The negotiation of a shared secret is both secure and reliable.
+	\item The identity of the communicating parties can be authenticated using public-key cryptography. This authentication can be made optional, but is generally required for at least one of the parties (typically servers).
+	\item The connection is reliable because each message transmitted includes a message integrity check using a message authentication code to prevent undetected loss or alteration of the data during transmission.
+\end{itemize}
+\subsection{Disadvantages}
+Attempts have been made to subvert aspects of the communications security that TLS seeks to provide and the protocol has been revised several times to address these security threats. The following is some of the known attacks on SSL:
+\begin{itemize}
+	\item Renegotiation attack
+	\item Version rollback attacks: False Start
+\end{itemize}
+Even with this all attack it is more secure to use SSL than not using it.
