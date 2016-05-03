@@ -39,3 +39,7 @@ Stage 2 happens after the user performs edits on the code and submits the code t
 This method is used as it generates a new initialization vector for code edits in order to disable the possibility of generating patterns while encrypting the code.
 
 \section{Component 5: Granting Access}
+
+It starts when a code owner would give access to other developers. The system first tries to retrieve the private key of the owner using the entered passphrase at login time. Then, the private key is used to decrypt the code's symmetric key and initialization vector from the database. The system then encrypts these keys using the public key of the user requested to have access to the code and then saves these encrypted versions for that specific code for the user in the database. The same procedure would occur in the case of revoking access but a removal of the encrypted keys for that user for a specific code from the database would be made.
+
+This method is used as it is simple of terms giving or revoking access to other developers and at the same time, it provides a secure way for encrypting the submitted codes on the system.
