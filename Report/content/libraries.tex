@@ -1,7 +1,24 @@
 \chapter{Libraries and Frameworks Used}
 
 \section{Rails}
+This project was developed using Ruby on Rails framework, which a framework for developing web applications. Basically Ruby on Rails provides some security features for development which are :-
+\begin{itemize}
+    \item It is not vulnerable to cross site scripting attacks(XSS) because it sends CSRF tokens user sessions saved as the user cookie and in the forms that are submitted in any part in the application.
+    
+    \item It is not vulnerable to SQL injection attacks because you do not have to write SQL queries into you code for database manipulation. 
+\end{itemize}
+
 
 \section{Devise}
+Device is a ruby Gem which is responsible for the user registration and log in to the system, and it is responsible for user authentication in the application. It adds more security features to the system  because it saves the passwords of the users as hashed in the database thus , this makes the system more secure
 
 \section{OpenSSL}
+
+\textit{OpenSSL} is a toolkit that provides Secure Socket Layer protocols which is used to make the system more secure the toolkit can do the following :-
+\begin{itemize}
+    \item Generate public and private keys for all the users
+    \item Provide Self assigning certificates (SSL) certificates for secure connection with the server
+    \item Symmetric key encryption algorithms
+    \item It was utilised for the encryption ,decryption process in the project
+\end{itemize}
+
