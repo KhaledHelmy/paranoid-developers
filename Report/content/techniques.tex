@@ -1,2 +1,48 @@
 \chapter{Computer Security Techniques Used}
 %Explanation of each computer security technique you used along with its advantages/disadvantages trade-offs.
+\section{AES}
+The Advanced Encryption Standard (AES) is an encryption algorithm used to encrypt electronic data using a piece of text called \textbf{encryption key}. AES encrypts each chunk of data separately, these chunks have fixed-length group of bits called \textbf{blocks}, the size of a block is the number of bits used to represent this block, each block size is 128 bit, while the key could be of three different sizes 128, 192 and 256 bits, a key of size 256 is the one use in this project. AES is a symmetric-key algorithm, meaning that the key used in encryption is the one that should be used in decryption. The encrypted text is also known as the cipher text, while the text to be encrypted also known as the plain text. In order to accommodate the fixed size of the plain text that could be encrypted using AES, several \textbf{mode of operation}s were invented, each of them cuts the \textbf{plain text} to blocks were each block is fed to a different AES, the advanced \textbf{mode of operation}s use the resulted encrypted text of the previous AES in different ways with the next block to be encrypted and the key. The simplest of the encryption modes is the Electronic Codebook (ECB) mode. The message is divided into blocks, and each block is encrypted separately, the disadvantage of this method is that identical plaintext blocks are encrypted into identical cipher text blocks thus, it does not hide data patterns well, in some senses, it doesn't provide serious message confidentiality. The \textbf{mode of operation} used in this project is Cipher Block Chaining (CBC). In CBC mode, each block of plaintext is XORed with the previous encrypted text block before being encrypted. This way, each encrypted text block depends on all plaintext blocks processed up to that point. To make each message unique, an initialization vector must be used in the first block.
+\pagebreak
+\subsection{Advantages}
+\begin{itemize}
+	\item AES has been adopted by the U.S. government and is now used worldwide.
+	\item AES is the first (and only) publicly accessible cipher approved by the National Security Agency (NSA) for top secret information.
+	\item Brute forcing the encryption key would take years to break it so it is against brute forcing, the largest successful  publicly known brute force attack against it was against a 64-bit key.
+	\item Attacks have been published that are computationally faster than a full brute force attack, though none as of 2013 are computationally feasible.
+\end{itemize}
+
+\subsection{Disadvantages}
+It does a lot processing.
+\begin{itemize}
+	\item Each block of the plain text passes through 14 repetition rounds of a certain set of operations.
+\end{itemize}
+
+\section{Public-key cryptography}
+Public-key cryptography, or asymmetric cryptography, is a cryptographic system that uses two kinds of keys, public keys that can be spread widely, while private keys are known only to the owner. In a public-key encryption system, any person can encrypt a message using the public key of the receiver, but such a message can be decrypted only with the receiver's private key. The strength of a public-key cryptography system relies on the degree of difficulty (computational impracticality) for a properly generated private key to be determined from its corresponding public key.
+\subsection{Advantages}
+\begin{itemize}
+	\item Private keys never need to be transmitted or revealed to anyone.
+	\item Avoid the concern that there may be a chance that someone can discover the secret key during transmission.
+	\item Do not require a secure channel for the initial exchange of one (or more) secret keys between the parties.
+	\item Given a proper public key it is computationally hard to reproduce the private key.
+	\item Public-key cryptography is used as a method of assuring the confidentiality, authenticity and non-repudiability.
+\end{itemize}
+\subsection{Disadvantages}
+\begin{itemize}
+	\item The main disadvantage of Public-key cryptography is speed.
+	\item Usually used only for small blocks of data, typically the transfer of a symmetric encryption key.
+\end{itemize}
+
+\section{The Project}
+In our implementation we use the combination of AES and Public-key cryptography to encrypt the content of the files.
+Each user generates the pair public and private key and saves the his public key in the database, so that everyone can use it. Given that the private key is generated using a passphrase which must be entered every time the private key is used to increase the security.
+First we encrypt the content of the file using AES-256-CBC using randomly generated key and initialization vector and store them in the database. Now no one can know the content of the file unless they have these randomly generated items which are not stored anywhere yet. After the encrypted file has been stored in the database we use the public key of the users that are authorized to use that file to encrypt the randomly generated items.
+\subsection{Advantages}
+\begin{itemize}
+	\item The content of the files are safe even from the database administrators.
+	\item User that are not authorized to use the file can not get through the globally un-know encryption key since it is not saved anywhere clear.
+\end{itemize}
+\subsection{Disadvantages}
+\begin{itemize}
+	\item Once an attacker got access to the server's local files he can get through all the codes easily since the public and private key are stored there.
+\end{itemize}
