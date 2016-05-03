@@ -6,6 +6,7 @@ class CodesController < ApplicationController
   before_action :encrypted_codes, only: [:show, :edit, :update, :destroy, :access, :index]
   before_action :public_access, only: [:show, :edit, :update]
   before_action :private_access, only: [:destroy, :access]
+  before_action :check_passphrase, only: [:edit]
 
   # GET /codes
   # GET /codes.json
@@ -191,6 +192,24 @@ class CodesController < ApplicationController
       if count == 0
         respond_to do |format|
           format.html { redirect_to :root, notice: 'Access Denied.' }
+          format.json { render json: {status: :access_denied} }
+        end
+      end
+    end
+
+    def check_passphrase
+      result = true
+      passphrase = session[:passphrase]
+      begin
+        private_key_file = `cat ~/.private_#{current_user.id}.pem`
+        private_key = OpenSSL::PKey::RSA.new(private_key_file, passphrase)
+        result = true
+      rescue Exception
+        result = false
+      end
+      if result == false
+        respond_to do |format|
+          format.html { redirect_to :root, notice: 'Passphrase is incorrect!' }
           format.json { render json: {status: :access_denied} }
         end
       end
