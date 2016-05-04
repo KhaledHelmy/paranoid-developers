@@ -39,7 +39,7 @@ Public-key cryptography, or asymmetric cryptography, is a cryptographic system t
 	\item Usually used only for small blocks of data, typically the transfer of a symmetric encryption key.
 \end{itemize}
 
-\section{Cryptographic hash function}
+\section{Cryptographic Hash Function}
 \par A cryptographic hash function is a mathematical algorithm that takes arbitrary input and produce a fixed-length string which is designed to also be one-way function, that is, a function which is infeasible to invert. The only way to recreate the input data from an ideal cryptographic hash function's output is to try a large number of possible inputs to see if they produce a match. \par
 One of it's applications is Password verification. Storing all user passwords as cleartext can result in a massive security breach if the password file is compromised. One way to reduce this danger is to only store the hash value of each password. To authenticate a user, the password presented by the user is hashed and compared with the stored hash. The password is often concatenated with a random, non-secret salt value before the hash function is applied. The salt is stored with the password hash. Because users have different salts, it is not feasible to store tables of precomputed hash values for common passwords. 
 \subsection{Advantages}
