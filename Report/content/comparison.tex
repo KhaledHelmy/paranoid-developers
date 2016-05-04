@@ -3,8 +3,27 @@
 \section{Protocols}
 
 \subsection{Kerberos}
+It is a network authentication protocol where it is used for user authentication to provide a secure communications between users over an in-secure network. First, a user would contact a verified Key Distribution Center (KDC) for authentication then the user receives what is called a ticket-granting ticket (TGT) which contains the user's information encrypted. The user then sends the TGT to the required server. The server then contacts the same TDC to verify the received TGT from the user. If the TGT is verified, it means that the user is authenticated.
+
+\subsubsection{Disadvantages:}
+\begin{itemize}
+    \item It requires available connectivity to the KDC.
+    \item The KDC has to be trusted by the user and the server.
+\end{itemize}
+
 \subsection{Secure Shell}
+Secure Shell (SSH) is a network protocol that allows a computer to remotely-connect to another computer in a secure encrypted connection. The protocol uses public-private key pair for authentication. The user's public key is saved on the computers for all users wishing to connect to it. The protocol then sends an encrypted challenge that is required to be decrypted using the private key of the user. If the user's private key is matching the public key used, the user would be able to decrypt the challenge and sends it back to the server so the server can check the validity of the decrypted challenge.
+
+\subsubsection{Disadvantages:}
+\begin{itemize}
+    \item The user has to verify and trust the server for the connection to be added for the user's trusted hosts.
+    \item A connection has to be established between the user and the server first for verification before the actual data transfer between them.
+\end{itemize}
+
 \subsection{Pretty Good Privacy}
+Pretty Good Privacy (PGP) is an encryption/decryption protocol for sending encryption keys over a network between parties. It uses symmetric keys for symmetric encryption of data and then encrypts the keys using the public key of the requested user to communicate with. The receiving user would then decrypt the keys using their own private key.
+
+In this project, PGP is adopted for key sharing between the users and the server for code encryption and decryption as it is secure due to using the public-private key encryption. It is also easy to be used. The protocol is tweaked such that it generates a new public-private key for each new user so that it doesn't require any server authentication first. Refer to \ref{sec:pgp_info_1} and \ref{sec:pgp_info_2} for detailed information.
 
 \section{Methods}
 
@@ -13,24 +32,24 @@ Symmetric cryptography means that one key is shared between parties where that k
 
 \subsubsection{Advantages:}
 \begin{itemize}
-	\item It is fast so it can be used in encrypting/decrypting large amount of data.
+    \item It is fast so it can be used in encrypting/decrypting large amount of data.
 \end{itemize}
 
 \subsubsection{Disadvantages:}
 \begin{itemize}
-	\item It is not very secure as it requires sharing the key among parties involved so the key can get compromised.
+    \item It is not very secure as it requires sharing the key among parties involved so the key can get compromised.
 \end{itemize}
 
 Asymmetric cryptography means that different keys are used for encryption and decryption, that is, one key to be used for encryption and another key would be used for decryption. This method is more secure that symmetric cryptography because it removes the burden of sharing keys between parties as the compromise of one key would not affect the other key. Example for that approach is public-key cryptography which is explained in the next section.
 
 \subsubsection{Advantages:}
 \begin{itemize}
-	\item It is secure as the compromise of one key would not affect the other key.
+    \item It is secure as the compromise of one key would not affect the other key.
 \end{itemize}
 
 \subsubsection{Disadvantages:}
 \begin{itemize}
-	\item It is slow so it can be used for small amount of data.
+    \item It is slow so it can be used for small amount of data.
 \end{itemize}
 
 In this project, both methods are used in different parts. Symmetric cryptography is used for encrypting codes in the system. Public-key cryptography is used for encrypting the keys used for symmetric cryptography.

@@ -7,7 +7,7 @@
 \par In order to accommodate the fixed size of the plain text that could be encrypted using AES, several \textbf{mode of operation}s were invented, each of them cuts the \textbf{plain text} to blocks were each block is fed to a different AES, the advanced \textbf{mode of operation}s use the resulted encrypted text of the previous AES in different ways with the next block to be encrypted and the key.
 \par The simplest of the encryption modes is the Electronic Codebook (ECB) mode. The message is divided into blocks, and each block is encrypted separately, the disadvantage of this method is that identical plaintext blocks are encrypted into identical cipher text blocks thus, it does not hide data patterns well, in some senses, it doesn't provide serious message confidentiality.
 \par The \textbf{mode of operation} used in this project is Cipher Block Chaining (CBC). In CBC mode, each block of plaintext is XORed with the previous encrypted text block before being encrypted. This way, each encrypted text block depends on all plaintext blocks processed up to that point. To make each message unique, an initialization vector must be used in the first block.
-\pagebreak
+
 \subsection{Advantages}
 \begin{itemize}
 	\item AES has been adopted by the U.S. government and is now used worldwide.
@@ -52,8 +52,6 @@ The ideal cryptographic hash function has four main properties:
 \end{itemize}
 \subsection{Disadvantages}
 The only disadvantage known is that when used in password verification it prevents the original passwords from being retrieved if forgotten, and they have to be replaced with new ones.
-
-\pagebreak
 
 \section{SSL}
 \par Transport Layer Security (TLS) and its predecessor, Secure Sockets Layer (SSL), both of which are frequently referred to as "SSL", are cryptographic protocols that provide communications security over a computer network. SSL is in widespread use in applications such as web browsing, email, Internet faxing, instant messaging, and voice-over-IP (VoIP). Major web sites use TLS to secure all communications between their servers and web browsers.

@@ -9,12 +9,14 @@ It starts when users sign up on the system. The user enters their \textbf{email}
 This method is used as it benefits from asymmetric encryption where there would be 2 keys in the process in which the loss of one of them would never affect the other.
 
 \section{Component 2: Code Submission}
+\label{sec:pgp_info_1}
 
 It comes when a user try to create a new code file. The user states the name of the code file and the content for the code. After the user submits these information, the system generates a random \textbf{key} and a random \textbf{initialization vector} to be used in the \textbf{AES 256 CBC} symmetric encryption for the code. Afterwards, the system retrieves the user's public key from the database to use it for encrypting the generated key and initialization vector and saving them in the database.
 
 This method is called \textbf{Pretty Good Privacy (PGP)} where it provides an extra security for data exchange. It uses symmetric encryption for fast encryption of large data like codes and it also uses asymmetric encryption for secure saving of the symmetric key used. As a result, submitted codes would be saved encrypted in the database.
 
 \section{Component 3: Code Retrieval}
+\label{sec:pgp_info_2}
 
 It comes when a user tries to access a code on the system. There are 3 possibilities at this point.
 
