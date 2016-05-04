@@ -1,7 +1,11 @@
 \chapter{Attack Scenarios}
 
 \section{Network Sniffing}
+Network Sniffing is the process of capturing the data which is transmitted from the client to the server via a network . Where basically it is considered as man in the middle attack where some attacker can capture the packets sent from the client to the server or the other way around and start contacting the two parties convincing convincing each of the parties that he is the other one. Thus, the system is hacked and the man in the middle can do whatever he wants in the system. However in our project we use SSL certificates which provides secure \textit{HTTPS} connection between the client and the server this because all the data that is sent from the client to the server is encrypted at the client side and then decrypted at the server side. Thus , if there is an attacker simulating a man in the middle attack he would not be able to do anything with the data he has in his hands because it would be encrypted.
 
 \section{Database Attack}
+If any person who is not authorised to access the database gained access to the database of the system by any means or even by mistake from any user in the system. Normally this person can have access to all the credentials and the codes of the users.
+However out system also can resist this kind of attack because all of the codes of the users are saved encrypted in the database, the passwords of the users as well are encrypted. Except for the public key of the users which is already known to anyone. Thus if an attacker got access to the database he will not be able to have access to any useful credentials for any of the users of the system.
 
 \section{Server Attack}
+If some attacker got access to the server by any means, he can have the private keys of the users if they are stored on the server and next he can access all the files of the users that he captured their private keys from the server, which is considered a severe attack to the system. However in this project the system does not store the private key of the users on the server, but uses passcodes to encrypt the private keys of the user, thus the attacker needs to get the passcode to get the private key and access any files on the system.
