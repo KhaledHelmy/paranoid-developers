@@ -1,6 +1,7 @@
 \chapter{Computer Security Techniques Used}
 %Explanation of each computer security technique you used along with its advantages/disadvantages trade-offs.
 \section{AES}
+\label{featuer:aes}
 \par The Advanced Encryption Standard (AES) is an encryption algorithm used to encrypt electronic data using a piece of text called \textbf{encryption key}. AES encrypts each chunk of data separately, these chunks have fixed-length group of bits called \textbf{blocks}, the size of a block is the number of bits used to represent this block, each block size is 128 bit, while the key could be of three different sizes 128, 192 and 256 bits, a key of size 256 is the one use in this project.
 \par AES is a symmetric-key algorithm, meaning that the key used in encryption is the one that is used in decryption. The encrypted text is also known as the cipher text, while the text to be encrypted also known as the plain text.
 \par In order to accommodate the fixed size of the plain text that could be encrypted using AES, several \textbf{mode of operation}s were invented, each of them cuts the \textbf{plain text} to blocks were each block is fed to a different AES, the advanced \textbf{mode of operation}s use the resulted encrypted text of the previous AES in different ways with the next block to be encrypted and the key.
@@ -22,6 +23,7 @@ It does a lot processing.
 \end{itemize}
 
 \section{Public-Key Cryptography}
+\label{featuer:pkc}
 Public-key cryptography, or asymmetric cryptography, is a cryptographic system that uses two kinds of keys, public keys that can be spread widely, while private keys are known only to the owner. In a public-key encryption system, any person can encrypt a message using the public key of the receiver, but such a message can be decrypted only with the receiver's private key. The strength of a public-key cryptography system relies on the degree of difficulty (computational impracticality) for a properly generated private key to be determined from its corresponding public key.
 \subsection{Advantages}
 \begin{itemize}
@@ -37,7 +39,7 @@ Public-key cryptography, or asymmetric cryptography, is a cryptographic system t
 	\item Usually used only for small blocks of data, typically the transfer of a symmetric encryption key.
 \end{itemize}
 
-\section{Cryptographic Hash Function}
+\section{Cryptographic hash function}
 \par A cryptographic hash function is a mathematical algorithm that takes arbitrary input and produce a fixed-length string which is designed to also be one-way function, that is, a function which is infeasible to invert. The only way to recreate the input data from an ideal cryptographic hash function's output is to try a large number of possible inputs to see if they produce a match. \par
 One of it's applications is Password verification. Storing all user passwords as cleartext can result in a massive security breach if the password file is compromised. One way to reduce this danger is to only store the hash value of each password. To authenticate a user, the password presented by the user is hashed and compared with the stored hash. The password is often concatenated with a random, non-secret salt value before the hash function is applied. The salt is stored with the password hash. Because users have different salts, it is not feasible to store tables of precomputed hash values for common passwords. 
 \subsection{Advantages}
@@ -50,6 +52,8 @@ The ideal cryptographic hash function has four main properties:
 \end{itemize}
 \subsection{Disadvantages}
 The only disadvantage known is that when used in password verification it prevents the original passwords from being retrieved if forgotten, and they have to be replaced with new ones.
+
+\pagebreak
 
 \section{SSL}
 \par Transport Layer Security (TLS) and its predecessor, Secure Sockets Layer (SSL), both of which are frequently referred to as "SSL", are cryptographic protocols that provide communications security over a computer network. SSL is in widespread use in applications such as web browsing, email, Internet faxing, instant messaging, and voice-over-IP (VoIP). Major web sites use TLS to secure all communications between their servers and web browsers.
@@ -73,6 +77,9 @@ Even with this all attack it is more secure to use SSL than not using it.
 \par In our implementation we use the combination of AES and Public-key cryptography to encrypt the content of the files.
 \par Each user generates the pair public and private key and saves the his public key in the database, so that everyone can use it. Given that the private key is generated using a passphrase which must be entered every time the private key is used to increase the security.
 \par First we encrypt the content of the file using AES-256-CBC using randomly generated key and initialization vector and store them in the database. Now no one can know the content of the file unless they have these randomly generated items which are not stored anywhere yet. After the encrypted file has been stored in the database we use the public key of the users that are authorized to use that file to encrypt the randomly generated items.
+
+\par We use a cryptographic hash function called \textbf{bcrypt} to hash the password of the users and store it in the database, the password entered while trying log sign in to the application is also hashed and compared to the saved hashed password. Bcrypt uses the signing up date of the user as a salt for the password.
+\par SSL is used to securely send the password and the passphrase to the server.
 \subsection{Advantages}
 \begin{itemize}
 	\item The content of the files are safe even from the database administrators.
