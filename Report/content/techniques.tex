@@ -1,6 +1,7 @@
 \chapter{Computer Security Techniques Used}
 %Explanation of each computer security technique you used along with its advantages/disadvantages trade-offs.
 \section{AES}
+\label{featuer:aes}
 \par The Advanced Encryption Standard (AES) is an encryption algorithm used to encrypt electronic data using a piece of text called \textbf{encryption key}. AES encrypts each chunk of data separately, these chunks have fixed-length group of bits called \textbf{blocks}, the size of a block is the number of bits used to represent this block, each block size is 128 bit, while the key could be of three different sizes 128, 192 and 256 bits, a key of size 256 is the one use in this project.
 \par AES is a symmetric-key algorithm, meaning that the key used in encryption is the one that is used in decryption. The encrypted text is also known as the cipher text, while the text to be encrypted also known as the plain text.
 \par In order to accommodate the fixed size of the plain text that could be encrypted using AES, several \textbf{mode of operation}s were invented, each of them cuts the \textbf{plain text} to blocks were each block is fed to a different AES, the advanced \textbf{mode of operation}s use the resulted encrypted text of the previous AES in different ways with the next block to be encrypted and the key.
@@ -22,6 +23,7 @@ It does a lot processing.
 \end{itemize}
 
 \section{Public-Key Cryptography}
+\label{featuer:pkc}
 Public-key cryptography, or asymmetric cryptography, is a cryptographic system that uses two kinds of keys, public keys that can be spread widely, while private keys are known only to the owner. In a public-key encryption system, any person can encrypt a message using the public key of the receiver, but such a message can be decrypted only with the receiver's private key. The strength of a public-key cryptography system relies on the degree of difficulty (computational impracticality) for a properly generated private key to be determined from its corresponding public key.
 \subsection{Advantages}
 \begin{itemize}
@@ -50,7 +52,9 @@ The ideal cryptographic hash function has four main properties:
 \end{itemize}
 \subsection{Disadvantages}
 The only disadvantage known is that when used in password verification it prevents the original passwords from being retrieved if forgotten, and they have to be replaced with new ones.
+
 \pagebreak
+
 \section{SSL}
 \par Transport Layer Security (TLS) and its predecessor, Secure Sockets Layer (SSL), both of which are frequently referred to as "SSL", are cryptographic protocols that provide communications security over a computer network. SSL is in widespread use in applications such as web browsing, email, Internet faxing, instant messaging, and voice-over-IP (VoIP). Major web sites use TLS to secure all communications between their servers and web browsers.
 \par The primary goal of the TLS protocol is to provide privacy and data integrity between two communicating computer applications.
